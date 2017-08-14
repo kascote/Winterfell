@@ -4,6 +4,7 @@ var Winterfell = require('../src/index');
 
 var schema      = require('./schema');
 var loginSchema = require('./loginSchema');
+var panesSchema = require('./panesSchema');
 
 var onRender = () => {
   console.log('Great news! Winterfell rendered successfully');
@@ -41,6 +42,16 @@ window.onload = function() {
                 onSwitchPanel={onSwitchPanel}
                 onSubmit={onSubmit} />,
     document.getElementById('form')
+  );
+
+  ReactDOM.render(
+    <Winterfell schema={panesSchema}
+                disableSubmit={true}
+                onRender={onRender}
+                onUpdate={onUpdate}
+                onSwitchPanel={onSwitchPanel}
+                onSubmit={onSubmit} />,
+    document.getElementById('pane-form')
   );
 
   /*
