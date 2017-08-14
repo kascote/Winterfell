@@ -1,5 +1,6 @@
 var React = require('react');
 var ReactDOM = require('react-dom');
+var PropTypes = require('prop-types');
 var _     = require('lodash').noConflict();
 
 var QuestionPanel = require('./questionPanel');
@@ -173,6 +174,19 @@ class Winterfell extends React.Component {
   }
 
 };
+
+Winterfell.propTypes = {
+  schema: PropTypes.object.isRequired,
+  panelId: PropTypes.string,
+  ref: PropTypes.string,
+  encType: PropTypes.string,
+  method: PropTypes.string,
+  action: PropTypes.string,
+  disableSubmit: PropTypes.bool,
+  questionAnswers: PropTypes.object,
+  renderError: PropTypes.func,
+  renderRequiredAsterisk: PropTypes.func
+}
 
 Winterfell.inputTypes    = require('./inputTypes');
 Winterfell.errorMessages = require('./lib/errors');
