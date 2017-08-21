@@ -1,10 +1,10 @@
-var React      = window.React = require('react');
-var ReactDOM   = require('react-dom');
-var Winterfell = require('../src/index');
+var React        = window.React = require('react');
+var ReactDOM     = require('react-dom');
+var Winterfell   = require('../src/index');
 
-var schema      = require('./schema');
-var loginSchema = require('./loginSchema');
-var panesSchema = require('./panesSchema');
+var schema       = require('./schema');
+var loginSchema  = require('./loginSchema');
+var PanelExample = require('./panelExample')
 
 var onRender = () => {
   console.log('Great news! Winterfell rendered successfully');
@@ -44,13 +44,7 @@ window.onload = function() {
     document.getElementById('form')
   );
 
-  ReactDOM.render(
-    <Winterfell schema={panesSchema}
-                disableSubmit={true}
-                onRender={onRender}
-                onUpdate={onUpdate}
-                onSwitchPanel={onSwitchPanel}
-                onSubmit={onSubmit} />,
+  ReactDOM.render( <PanelExample />,
     document.getElementById('pane-form')
   );
 
@@ -62,4 +56,5 @@ window.onload = function() {
 
   $('#login-json-view')
     .JSONView($('#login-json-view').html());
+
 };

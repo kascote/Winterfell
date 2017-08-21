@@ -70,10 +70,16 @@ class Winterfell extends React.Component {
 
   componentWillReceiveProps(nextProps) {
     this.setState({
-      action          : nextProps.action,
-      schema          : nextProps.schema,
-      questionAnswers : nextProps.questionAnswers
-    });
+        action          : nextProps.action,
+        schema          : nextProps.schema,
+        questionAnswers : Object.assign({}, nextProps.questionAnswers, this.state.questionAnswers),
+      },
+      () => {
+        if (nextProps.panelId !== undefined) {
+          this.handleSwitchPanel(nextProps.panelId, true);
+        }
+      }
+    )
   }
 
   handleAnswerChange(questionId, questionAnswer) {
@@ -200,6 +206,8 @@ Winterfell.addErrorMessages = Winterfell.errorMessages.addErrorMessages;
 
 Winterfell.addValidationMethod  = Winterfell.validation.addValidationMethod;
 Winterfell.addValidationMethods = Winterfell.validation.addValidationMethods;
+
+Winterfell.purgeQuestionAnswers = Winterfell.validation.purgeQuestionAnswers
 
 Winterfell.defaultProps = {
   onSubmit      : () => {},
