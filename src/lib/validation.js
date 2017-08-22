@@ -277,7 +277,7 @@ var purgeQuestionAnswers = (questions, questionAnswers, purgeAnswers, purge) => 
 
             var needPurge = false
             if (Array.isArray(purgeAnswers[question.questionId])) {
-              needPurge = _.contains(purgeAnswers[question.questionId], option.value)
+              needPurge = !_.contains(purgeAnswers[question.questionId], option.value)
             } else {
               needPurge = purgeAnswers[question.questionId] !== option.value
             }
