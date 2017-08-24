@@ -10,6 +10,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== 'function' 
 
 var React = require('react');
 var ReactDOM = require('react-dom');
+var PropTypes = require('prop-types');
 var _ = require('lodash').noConflict();
 
 var QuestionPanel = require('./questionPanel');
@@ -77,10 +78,16 @@ var Winterfell = (function (_React$Component) {
   _createClass(Winterfell, [{
     key: 'componentWillReceiveProps',
     value: function componentWillReceiveProps(nextProps) {
+      var _this = this;
+
       this.setState({
         action: nextProps.action,
         schema: nextProps.schema,
-        questionAnswers: nextProps.questionAnswers
+        questionAnswers: Object.assign({}, nextProps.questionAnswers, this.state.questionAnswers)
+      }, function () {
+        if (nextProps.panelId !== undefined) {
+          _this.handleSwitchPanel(nextProps.panelId, true);
+        }
       });
     }
   }, {
@@ -121,7 +128,7 @@ var Winterfell = (function (_React$Component) {
   }, {
     key: 'handleSubmit',
     value: function handleSubmit(action) {
-      var _this = this;
+      var _this2 = this;
 
       if (this.props.disableSubmit) {
         this.props.onSubmit(this.state.questionAnswers, action);
@@ -135,20 +142,20 @@ var Winterfell = (function (_React$Component) {
       this.setState({
         action: action
       }, function () {
-        if (!_this.formComponent) {
+        if (!_this2.formComponent) {
           return;
         }
 
-        _this.formComponent.submit();
+        _this2.formComponent.submit();
       });
     }
   }, {
     key: 'render',
     value: function render() {
-      var _this2 = this;
+      var _this3 = this;
 
       var currentPanel = _.find(this.state.schema.questionPanels, function (panel) {
-        return panel.panelId == _this2.state.currentPanel.panelId;
+        return panel.panelId == _this3.state.currentPanel.panelId;
       });
 
       return React.createElement(
@@ -157,7 +164,7 @@ var Winterfell = (function (_React$Component) {
           encType: this.props.encType,
           action: this.state.action,
           ref: function (ref) {
-            return _this2.formComponent = ref;
+            return _this3.formComponent = ref;
           },
           className: this.state.schema.classes.form },
         React.createElement(
@@ -197,6 +204,19 @@ var Winterfell = (function (_React$Component) {
 
 ;
 
+Winterfell.propTypes = {
+  schema: PropTypes.object.isRequired,
+  panelId: PropTypes.string,
+  ref: PropTypes.string,
+  encType: PropTypes.string,
+  method: PropTypes.string,
+  action: PropTypes.string,
+  disableSubmit: PropTypes.bool,
+  questionAnswers: PropTypes.object,
+  renderError: PropTypes.func,
+  renderRequiredAsterisk: PropTypes.func
+};
+
 Winterfell.inputTypes = require('./inputTypes');
 Winterfell.errorMessages = require('./lib/errors');
 Winterfell.validation = require('./lib/validation');
@@ -209,6 +229,8 @@ Winterfell.addErrorMessages = Winterfell.errorMessages.addErrorMessages;
 
 Winterfell.addValidationMethod = Winterfell.validation.addValidationMethod;
 Winterfell.addValidationMethods = Winterfell.validation.addValidationMethods;
+
+Winterfell.purgeQuestionAnswers = Winterfell.validation.purgeQuestionAnswers;
 
 Winterfell.defaultProps = {
   onSubmit: function onSubmit() {},

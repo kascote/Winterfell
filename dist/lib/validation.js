@@ -199,9 +199,69 @@ var addValidationMethods = function addValidationMethods(methods) {
   }
 };
 
+/**
+ * Remove out of scope responses from QuestionAnswers
+ *
+ * @param  array  questions       Questions to run through
+ * @param  object questionAnswers Current answers for questions
+ * @param  array  purgeAnswers    Answers to be removed
+ * @param  bool   purge           Purge mode for all child answers
+ * @return array                  All active questions
+ */
+
+var purgeQuestionAnswers = function purgeQuestionAnswers(questions, questionAnswers, purgeAnswers, purge) {
+  purgeAnswers = purgeAnswers || Object.assign({}, questionAnswers);
+  purge = typeof purge === 'undefined' ? false : purge;
+
+  questions.forEach(function (question) {
+
+    if (typeof question.input.options === 'undefined' || question.input.options.length === 0) {
+
+      if (purge) {
+        purgeAnswers[question.questionId] = null;
+      }
+      return;
+    }
+
+    if (purge) {
+      purgeAnswers[question.questionId] = null;
+
+      question.input.options.forEach(function (option) {
+        if (typeof option.conditionalQuestions !== 'undefined' && option.conditionalQuestions.length !== 0) {
+          purgeAnswers = purgeQuestionAnswers(option.conditionalQuestions, questionAnswers, purgeAnswers, purge);
+        }
+      });
+
+      return;
+    }
+
+    question.input.options.forEach(function (option) {
+
+      if (typeof purgeAnswers[question.questionId] !== 'undefined') {
+
+        var needPurge = false;
+        if (Array.isArray(purgeAnswers[question.questionId])) {
+          needPurge = !_.contains(purgeAnswers[question.questionId], option.value);
+        } else {
+          needPurge = purgeAnswers[question.questionId] !== option.value;
+        }
+
+        if (typeof option.conditionalQuestions !== 'undefined' && option.conditionalQuestions.length !== 0) {
+          purgeAnswers = purgeQuestionAnswers(option.conditionalQuestions, questionAnswers, purgeAnswers, needPurge);
+        }
+      }
+    });
+  });
+
+  return _.omit(purgeAnswers, function (value, key, object) {
+    return value === null;
+  });
+};
+
 module.exports = {
   validateAnswer: validateAnswer,
   getActiveQuestions: getActiveQuestions,
+  purgeQuestionAnswers: purgeQuestionAnswers,
   getActiveQuestionsFromQuestionSets: getActiveQuestionsFromQuestionSets,
   getQuestionPanelInvalidQuestions: getQuestionPanelInvalidQuestions,
   addValidationMethod: addValidationMethod,
