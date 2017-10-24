@@ -10,7 +10,8 @@ class Question extends React.Component {
       questionId,
       value,
       this.props.validations,
-      this.props.validateOn
+      this.props.validateOn,
+      this.props.questionSetId
     );
   }
 

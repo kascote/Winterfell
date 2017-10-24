@@ -50,6 +50,7 @@ class PenelExample extends Component {
     return pane === this.state.currentPanel ? 'active' : ''
   }
 
+
   render() {
     return(
       <div className="panel-example">

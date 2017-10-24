@@ -23,7 +23,7 @@ class QuestionSet extends React.Component {
                   renderRequiredAsterisk={this.props.renderRequiredAsterisk}
                   questionAnswers={this.props.questionAnswers}
                   validationErrors={this.props.validationErrors}
-                  onAnswerChange={this.props.onAnswerChange}
+                  onAnswerChange={ this.props.onAnswerChange }
                   onQuestionBlur={this.props.onQuestionBlur}
                   onKeyDown={this.props.onKeyDown} />
       );

@@ -82,14 +82,56 @@ class Winterfell extends React.Component {
     )
   }
 
-  handleAnswerChange(questionId, questionAnswer) {
+  handleAnswerChange(questionId, questionAnswer, questionSetId) {
+
+
     var questionAnswers = _.chain(this.state.questionAnswers)
                            .set(questionId, questionAnswer)
                            .value();
 
+
+    console.warn('schema', this.props.schema)
+    console.warn('questionSetId', questionSetId)
+    this.removeEmptyAnswers(questionAnswers, questionId, questionAnswer, questionSetId)
+
     this.setState({
       questionAnswers : questionAnswers,
     }, this.props.onUpdate.bind(null, questionAnswers));
+  }
+
+  removeEmptyAnswers(questionAnswers, questionId, questionAnswer, questionSetId) {
+    // get the questionSet where replied
+    var qs = this.props.schema.questionSets.filter(qs => qs.questionSetId === questionSetId)
+    if (qs.length === 0) {
+      return
+    }
+    // get the answered question
+    var reply = qs[0].questions.filter( q => q.questionId === questionId)
+    if (reply.length === 0) {
+      return
+    }
+    // get the options that *not match* the answered question
+    var answ = ""
+    if (questionAnswer instanceof Array) {
+      answ = reply[0].input.options.filter( o => _.findIndex(questionAnswer, (x) => o.value === x) < 0 )
+    } else {
+      answ = reply[0].input.options.filter( o => o.value !== questionAnswer)
+    }
+
+    // lets go
+    this.removeAnswers(questionAnswers, answ[0].conditionalQuestions)
+  }
+
+
+  // down the rabit hole removing all the answers
+  removeAnswers(questionAnswers, questions) {
+    questions.forEach((cq) => {
+      cq.input.options.forEach( (o) => {
+        this.removeAnswers( questionAnswers, o.conditionalQuestions )
+      })
+      console.warn('removed', cq.questionId)
+      delete questionAnswers[cq.questionId]
+    })
   }
 
   handleSwitchPanel(panelId, preventHistory) {

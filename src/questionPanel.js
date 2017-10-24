@@ -132,8 +132,8 @@ class QuestionPanel extends React.Component {
     this.props.onPanelBack();
   }
 
-  handleAnswerChange(questionId, questionAnswer, validations, validateOn) {
-    this.props.onAnswerChange(questionId, questionAnswer);
+  handleAnswerChange(questionId, questionAnswer, validations, validateOn, questionSetId) {
+    this.props.onAnswerChange(questionId, questionAnswer, questionSetId);
 
     this.setState({
       validationErrors : _.chain(this.state.validationErrors)
