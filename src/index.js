@@ -89,9 +89,6 @@ class Winterfell extends React.Component {
                            .set(questionId, questionAnswer)
                            .value();
 
-
-    console.warn('schema', this.props.schema)
-    console.warn('questionSetId', questionSetId)
     this.removeEmptyAnswers(questionAnswers, questionId, questionAnswer, questionSetId)
 
     this.setState({
@@ -106,7 +103,7 @@ class Winterfell extends React.Component {
       return
     }
     // get the answered question
-    var reply = qs[0].questions.filter( q => q.questionId === questionId)
+    var reply = this.searchQuestion(qs[0].questions, questionId)
     if (reply.length === 0) {
       return
     }
@@ -119,7 +116,34 @@ class Winterfell extends React.Component {
     }
 
     // lets go
-    this.removeAnswers(questionAnswers, answ[0].conditionalQuestions)
+    answ.forEach((a) => {
+      this.removeAnswers(questionAnswers, a.conditionalQuestions)
+    })
+
+    var rpl = questionAnswers[reply[0].questionId]
+    if (( rpl instanceof Array) && (rpl.length === 0)) {
+      delete questionAnswers[reply[0].questionId]
+    }
+  }
+
+  // Transverse the question down to the selected one
+  searchQuestion( questions, questionId) {
+
+    var r = questions.filter( q => q.questionId === questionId)
+    if (r.length === 1) {
+      return r
+    }
+
+    questions.every((q) => {
+      var x = q.input.options.every((o) => {
+        if (o.conditionalQuestions.length > 0) {
+          r = this.searchQuestion(o.conditionalQuestions, questionId)
+          return !(r.length > 0)
+        }
+      })
+      return !(r.length > 0)
+    })
+    return r
   }
 
 
@@ -129,7 +153,6 @@ class Winterfell extends React.Component {
       cq.input.options.forEach( (o) => {
         this.removeAnswers( questionAnswers, o.conditionalQuestions )
       })
-      console.warn('removed', cq.questionId)
       delete questionAnswers[cq.questionId]
     })
   }
