@@ -27,7 +27,7 @@ var Question = (function (_React$Component) {
   _createClass(Question, [{
     key: 'handleInputChange',
     value: function handleInputChange(questionId, value) {
-      this.props.onAnswerChange(questionId, value, this.props.validations, this.props.validateOn);
+      this.props.onAnswerChange(questionId, value, this.props.validations, this.props.validateOn, this.props.questionSetId);
     }
   }, {
     key: 'handleInputBlur',

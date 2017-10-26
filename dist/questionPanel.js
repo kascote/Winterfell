@@ -145,8 +145,8 @@ var QuestionPanel = (function (_React$Component) {
     }
   }, {
     key: 'handleAnswerChange',
-    value: function handleAnswerChange(questionId, questionAnswer, validations, validateOn) {
-      this.props.onAnswerChange(questionId, questionAnswer);
+    value: function handleAnswerChange(questionId, questionAnswer, validations, validateOn, questionSetId) {
+      this.props.onAnswerChange(questionId, questionAnswer, questionSetId);
 
       this.setState({
         validationErrors: _.chain(this.state.validationErrors).set(questionId, []).value()

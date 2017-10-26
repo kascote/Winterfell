@@ -92,12 +92,95 @@ var Winterfell = (function (_React$Component) {
     }
   }, {
     key: 'handleAnswerChange',
-    value: function handleAnswerChange(questionId, questionAnswer) {
+    value: function handleAnswerChange(questionId, questionAnswer, questionSetId) {
+
       var questionAnswers = _.chain(this.state.questionAnswers).set(questionId, questionAnswer).value();
+
+      this.removeEmptyAnswers(questionAnswers, questionId, questionAnswer, questionSetId);
 
       this.setState({
         questionAnswers: questionAnswers
       }, this.props.onUpdate.bind(null, questionAnswers));
+    }
+  }, {
+    key: 'removeEmptyAnswers',
+    value: function removeEmptyAnswers(questionAnswers, questionId, questionAnswer, questionSetId) {
+      var _this2 = this;
+
+      // get the questionSet where replied
+      var qs = this.props.schema.questionSets.filter(function (qs) {
+        return qs.questionSetId === questionSetId;
+      });
+      if (qs.length === 0) {
+        return;
+      }
+      // get the answered question
+      var reply = this.searchQuestion(qs[0].questions, questionId);
+      if (reply.length === 0) {
+        return;
+      }
+      // get the options that *not match* the answered question
+      var answ = "";
+      if (questionAnswer instanceof Array) {
+        answ = reply[0].input.options.filter(function (o) {
+          return _.findIndex(questionAnswer, function (x) {
+            return o.value === x;
+          }) < 0;
+        });
+      } else {
+        answ = reply[0].input.options.filter(function (o) {
+          return o.value !== questionAnswer;
+        });
+      }
+
+      // lets go
+      answ.forEach(function (a) {
+        _this2.removeAnswers(questionAnswers, a.conditionalQuestions);
+      });
+
+      var rpl = questionAnswers[reply[0].questionId];
+      if (rpl instanceof Array && rpl.length === 0) {
+        delete questionAnswers[reply[0].questionId];
+      }
+    }
+
+    // Transverse the question down to the selected one
+  }, {
+    key: 'searchQuestion',
+    value: function searchQuestion(questions, questionId) {
+      var _this3 = this;
+
+      var r = questions.filter(function (q) {
+        return q.questionId === questionId;
+      });
+      if (r.length === 1) {
+        return r;
+      }
+
+      questions.every(function (q) {
+        var x = q.input.options.every(function (o) {
+          if (o.conditionalQuestions.length > 0) {
+            r = _this3.searchQuestion(o.conditionalQuestions, questionId);
+            return !(r.length > 0);
+          }
+        });
+        return !(r.length > 0);
+      });
+      return r;
+    }
+
+    // down the rabit hole removing all the answers
+  }, {
+    key: 'removeAnswers',
+    value: function removeAnswers(questionAnswers, questions) {
+      var _this4 = this;
+
+      questions.forEach(function (cq) {
+        cq.input.options.forEach(function (o) {
+          _this4.removeAnswers(questionAnswers, o.conditionalQuestions);
+        });
+        delete questionAnswers[cq.questionId];
+      });
     }
   }, {
     key: 'handleSwitchPanel',
@@ -128,7 +211,7 @@ var Winterfell = (function (_React$Component) {
   }, {
     key: 'handleSubmit',
     value: function handleSubmit(action) {
-      var _this2 = this;
+      var _this5 = this;
 
       if (this.props.disableSubmit) {
         this.props.onSubmit(this.state.questionAnswers, action);
@@ -142,20 +225,20 @@ var Winterfell = (function (_React$Component) {
       this.setState({
         action: action
       }, function () {
-        if (!_this2.formComponent) {
+        if (!_this5.formComponent) {
           return;
         }
 
-        _this2.formComponent.submit();
+        _this5.formComponent.submit();
       });
     }
   }, {
     key: 'render',
     value: function render() {
-      var _this3 = this;
+      var _this6 = this;
 
       var currentPanel = _.find(this.state.schema.questionPanels, function (panel) {
-        return panel.panelId == _this3.state.currentPanel.panelId;
+        return panel.panelId == _this6.state.currentPanel.panelId;
       });
 
       return React.createElement(
@@ -164,7 +247,7 @@ var Winterfell = (function (_React$Component) {
           encType: this.props.encType,
           action: this.state.action,
           ref: function (ref) {
-            return _this3.formComponent = ref;
+            return _this6.formComponent = ref;
           },
           className: this.state.schema.classes.form },
         React.createElement(
