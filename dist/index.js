@@ -107,7 +107,6 @@ var Winterfell = (function (_React$Component) {
     value: function removeEmptyAnswers(questionAnswers, questionId, questionAnswer, questionSetId) {
       var _this2 = this;
 
-      debugger;
       // get the questionSet where replied
       var qs = this.props.schema.questionSets.filter(function (qs) {
         return qs.questionSetId === questionSetId;
