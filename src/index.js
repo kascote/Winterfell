@@ -97,6 +97,7 @@ class Winterfell extends React.Component {
   }
 
   removeEmptyAnswers(questionAnswers, questionId, questionAnswer, questionSetId) {
+    debugger
     // get the questionSet where replied
     var qs = this.props.schema.questionSets.filter(qs => qs.questionSetId === questionSetId)
     if (qs.length === 0) {
@@ -138,10 +139,12 @@ class Winterfell extends React.Component {
       var x = q.input.options.every((o) => {
         if (o.conditionalQuestions.length > 0) {
           r = this.searchQuestion(o.conditionalQuestions, questionId)
-          return !(r.length > 0)
+          return (r.length === 0)
+        } else {
+          return true
         }
       })
-      return !(r.length > 0)
+      return (r.length === 0)
     })
     return r
   }

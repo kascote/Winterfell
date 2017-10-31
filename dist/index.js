@@ -107,6 +107,7 @@ var Winterfell = (function (_React$Component) {
     value: function removeEmptyAnswers(questionAnswers, questionId, questionAnswer, questionSetId) {
       var _this2 = this;
 
+      debugger;
       // get the questionSet where replied
       var qs = this.props.schema.questionSets.filter(function (qs) {
         return qs.questionSetId === questionSetId;
@@ -161,10 +162,12 @@ var Winterfell = (function (_React$Component) {
         var x = q.input.options.every(function (o) {
           if (o.conditionalQuestions.length > 0) {
             r = _this3.searchQuestion(o.conditionalQuestions, questionId);
-            return !(r.length > 0);
+            return r.length === 0;
+          } else {
+            return true;
           }
         });
-        return !(r.length > 0);
+        return r.length === 0;
       });
       return r;
     }

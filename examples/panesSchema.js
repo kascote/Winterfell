@@ -81,7 +81,59 @@ module.exports = {
           "conditionalQuestions": []
         }]
       }
-    }, {
+    },
+    {
+      "questionId": "11111af3zr00013t5pmg1fs1gl",
+      "question": "Estado de la Planta",
+      "input": {
+        "type": "radioOptionsInput",
+        "options": [
+          {
+            "text": "Limpia",
+            "value": "limpia",
+            "conditionalQuestions": [],
+          },
+          {
+            "text": "Sucia",
+            "value": "sucia",
+            "conditionalQuestions": [
+              {
+                "questionId": "192929292929292",
+                "question": "Que Tan Sucia",
+                "assigned_to": "jdjdjddjdjdj",
+                "input": {
+                  "type": "checkboxOptionsInput",
+                  "options": [
+                    {
+                      "text": "Mucho",
+                      "value": "mucho",
+                      "conditionalQuestions": []
+                    },
+                    {
+                      "text": "Poco",
+                      "value": "poco",
+                      "conditionalQuestions": []
+                    },
+                    {
+                      "text": "Alto",
+                      "value": "algo",
+                      "conditionalQuestions": []
+                    }
+                  ]
+
+                }
+              }
+            ],
+          },
+          {
+            "text": "SoS",
+            "value": "sos",
+            "conditionalQuestions": [],
+          }
+        ]
+      }
+    },
+    {
       "questionId": "cj6caf3zr00043t5pocit8x7o",
       "question": "Cuales son sus comidas favoritas ?",
       "input": {
