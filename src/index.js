@@ -97,7 +97,6 @@ class Winterfell extends React.Component {
   }
 
   removeEmptyAnswers(questionAnswers, questionId, questionAnswer, questionSetId) {
-    debugger
     // get the questionSet where replied
     var qs = this.props.schema.questionSets.filter(qs => qs.questionSetId === questionSetId)
     if (qs.length === 0) {
