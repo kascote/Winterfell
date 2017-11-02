@@ -30,7 +30,11 @@ module.exports = {
       }
     },
     "button": {
-      "text": "Submit"
+      "text": "Guardar",
+      "disabled": true
+    },
+    "backButton": {
+      "disabled": true
     },
     "questionSets": [{
       "index": 1,
