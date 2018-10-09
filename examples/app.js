@@ -1,19 +1,19 @@
-var React        = window.React = require('react');
-var ReactDOM     = require('react-dom');
-var Winterfell   = require('../src/index');
+import React from 'react';
+import ReactDOM from 'react-dom';
+import Winterfell from '../src/index';
 
-var schema       = require('./schema');
-var loginSchema  = require('./loginSchema');
-var PanelExample = require('./panelExample')
+import schema from './schema';
+import loginSchema from './loginSchema';
+import PanelExample from './panelExample';
 
 var onRender = () => {
   console.log('Great news! Winterfell rendered successfully');
 };
 
-var onUpdate = (questionAnswers) => {
+var onUpdate = questionAnswers => {
   console.log('Question Updated! The current set of answers is: ', questionAnswers);
 };
-var onSwitchPanel = (panel) => {
+var onSwitchPanel = panel => {
   console.log('Moving on to the panel that is identified as "' + panel.panelId + '"');
 };
 
@@ -27,34 +27,33 @@ var onSubmit = (questionAnswers, target) => {
 
 window.onload = function() {
   ReactDOM.render(
-    <Winterfell schema={loginSchema}
-                onRender={onRender}
-                onUpdate={onUpdate}
-                renderRequiredAsterisk={() => <span>{'*'}</span>} />,
+    <Winterfell
+      schema={loginSchema}
+      onRender={onRender}
+      onUpdate={onUpdate}
+      renderRequiredAsterisk={() => <span>{'*'}</span>}
+    />,
     document.getElementById('login-form')
   );
 
   ReactDOM.render(
-    <Winterfell schema={schema}
-                disableSubmit={true}
-                onRender={onRender}
-                onUpdate={onUpdate}
-                onSwitchPanel={onSwitchPanel}
-                onSubmit={onSubmit} />,
+    <Winterfell
+      schema={schema}
+      disableSubmit={true}
+      onRender={onRender}
+      onUpdate={onUpdate}
+      onSwitchPanel={onSwitchPanel}
+      onSubmit={onSubmit}
+    />,
     document.getElementById('form')
   );
 
-  ReactDOM.render( <PanelExample />,
-    document.getElementById('pane-form')
-  );
+  ReactDOM.render(<PanelExample />, document.getElementById('pane-form'));
 
   /*
    * JSON View
    */
-  $('#json-view')
-    .JSONView($('#json-view').html());
+  // $('#json-view').JSONView($('#json-view').html());
 
-  $('#login-json-view')
-    .JSONView($('#login-json-view').html());
-
+  // $('#login-json-view').JSONView($('#login-json-view').html());
 };

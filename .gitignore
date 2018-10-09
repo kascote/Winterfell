@@ -1,3 +1,8 @@
 .DS_Store
 node_modules
 examples/build/app.js
+.cache
+dist/example*
+dist/prism*
+dist/app*
+dist/index.html

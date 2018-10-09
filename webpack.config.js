@@ -1,35 +1,40 @@
-const webpack = require('webpack');
-const path    = require('path');
+const path = require('path');
+const nodeExternals = require('webpack-node-externals');
 
 module.exports = {
-  context   : __dirname + '/src',
-  entry     : {
-    javascript : './index.js'
+  mode: 'development',
+  devtool: 'eval',
+  entry: path.resolve(__dirname, 'src/index.js'),
+  output: {
+    path: path.resolve(__dirname, 'dist'),
+    filename: 'index.js',
+    library: 'Winterfell',
+    libraryTarget: 'commonjs'
   },
-  module    : {
-    loaders : [{
-      test    : /\.js$/,
-      exclude : /node_modules/,
-      loaders : ['babel-loader'],
-    }],
-  },
-  externals : {
-    'react'        : 'React',
-    'react/addons' : 'React'
-  },
-  output    : {
-    libraryTarget : 'var',
-    library       : 'Winterfell',
-    filename      : 'winterfell.min.js',
-    path          : __dirname + '/dist'
-  },
-  plugins  : [
-    new webpack.optimize.OccurenceOrderPlugin(),
-    new webpack.optimize.DedupePlugin(),
-    new webpack.optimize.UglifyJsPlugin({
-      compress : {
-        warnings : false
+  externals: [nodeExternals()],
+  module: {
+    rules: [
+      {
+        test: /\.js$/,
+        exclude: /(node_modules|bower_components)/,
+        loader: 'babel-loader',
+        options: {
+          presets: ['@babel/preset-env', '@babel/react']
+        }
+      },
+      {
+        test: /\.css$/,
+        use: ['style-loader', 'css-loader']
       }
-    })
-  ]
+    ]
+  }
 };
+
+/*
+  context: __dirname + '/src',
+  externals: {
+    react: 'React',
+    'react/addons': 'React'
+  },
+
+*/
